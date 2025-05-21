@@ -8,7 +8,7 @@ class Screen2 extends StatelessWidget {
   // (keine)
 
   // Konstruktor
-   const Screen2({super.key});
+  const Screen2({super.key});
 
   // Methoden
   @override
@@ -30,28 +30,32 @@ class Screen2 extends StatelessWidget {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 fillColor: Colors.white,
-                filled: true,                hintText: 'Username',
+                filled: true,
+                hintText: 'Username',
               ),
             ),
             SizedBox(height: 16),
-            TextField(
+            TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: validateEmail,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 filled: true,
                 fillColor: Colors.white,
-                hintText: "E-Mail",
+                hintText: "Email",
               ),
             ),
             SizedBox(height: 16),
-            TextField(
+            TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: validatePassword,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 filled: true,
                 fillColor: Colors.white,
-                hintText: "Passwort",
+                hintText: "Password",
               ),
-            ),
-            SizedBox(height: 8),
+            ),            SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -78,19 +82,30 @@ class Screen2 extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Screen4()),
+                  context,
+                  MaterialPageRoute(builder: (context) => Screen4()),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF2E7BED),
-                padding: EdgeInsets.only(top: 16, left: 40, right: 40, bottom: 16),
+                padding: EdgeInsets.only(
+                  top: 16,
+                  left: 40,
+                  right: 40,
+                  bottom: 16,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
               child: Text(
                 "Weiter",
-                style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Roboto", fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: "Roboto",
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             SizedBox(height: 64),
@@ -116,6 +131,7 @@ class Screen2 extends StatelessWidget {
       ),
     );
   }
+
   String? validateUsername(String? userInput) {
     if (userInput == null || userInput.isEmpty) {
       return 'Bitte geben Sie einen Benutzernamen ein';
@@ -148,6 +164,41 @@ class Screen2 extends StatelessWidget {
     }
 
     return null; // Validierung erfolgreich
-  // Hier können Sie null zurückgeben, wenn die Validierung erfolgreich ist
+    // Hier können Sie null zurückgeben, wenn die Validierung erfolgreich ist
+  }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Bitte eine E-Mail-Adresse eingeben';
+    }
+    // Überprüfen, ob die E-Mail-Adresse ein gültiges Format hat
+    String pattern = r'^[^@]+@[^@]+\.[^@]+';
+    RegExp regex = RegExp(pattern);
+    if (!regex.hasMatch(value)) {
+      return 'Bitte eine gültige E-Mail-Adresse eingeben';
+    }
+    return null; // E-Mail ist gültig
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Bitte Passwort eingeben';
+    }
+    if (value.length < 8) {
+      return 'Das Passwort muss mindestens 8 Zeichen lang sein';
+    }
+    if (!RegExp(r'[a-z]').hasMatch(value)) {
+      return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten';
+    }
+    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      return 'Das Passwort muss mindestens einen Großbuchstaben enthalten';
+    }
+    if (!RegExp(r'[0-9]').hasMatch(value)) {
+      return 'Das Passwort muss mindestens eine Zahl enthalten';
+    }
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+      return 'Das Passwort muss mindestens ein Sonderzeichen enthalten';
+    }
+    return null; // Das Passwort ist gültig
   }
 }
